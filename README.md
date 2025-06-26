@@ -13,7 +13,7 @@ This project provides an easy-to-use web interface for configuring and monitorin
 
 ## Quick Start
 
-1. **Clone this repository:**
+1. **Update your system:**
    ```bash
    sudo apt update && sudo apt upgrade -y
    
