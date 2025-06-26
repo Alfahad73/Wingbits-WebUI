@@ -15,12 +15,12 @@ This project provides an easy-to-use web interface for configuring and monitorin
 
 1. **Clone this repository:**
    ```bash
-   git clone https://github.com/Alfahad73/Wingbits-webconfig.git
-   cd Wingbits-webconfig
-
-2. **Run the installation script:**
+   sudo apt update && sudo apt upgrade -y
+   
+2. **Clone this repository:**
    ```bash
-   sudo bash install.sh
+   curl -sL https://raw.githubusercontent.com/Alfahad73/Wingbits-WebUI/main/install.sh | sudo loc="Your-latitude,Your-longitude" id="Your-station-ID" bash
+
    
 The script will automatically detect your system, install all requirements, and launch the application.
 
