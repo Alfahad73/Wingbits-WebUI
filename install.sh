@@ -2,10 +2,28 @@
 
 # ==========================================
 # Wingbits Station Web Config - Installer
-# (Auto Location & Station ID)
 # ==========================================
 
 set -e
+
+REPO_URL="https://github.com/Alfahad73/Wingbits-WebUI.git"
+INSTALL_DIR="/opt/wingbits-webui"
+
+# إذا كنت داخل مجلد المشروع، نفذ التثبيت مباشرة
+if [ -f "$(dirname "$0")/project-setup.sh" ]; then
+    SCRIPT_DIR="$(dirname "$(realpath "$0")")"
+else
+    # إذا لم تكن الملفات موجودة، نزّل الريبو كامل
+    if [ ! -d "$INSTALL_DIR" ]; then
+        echo "Cloning Wingbits-WebUI project to $INSTALL_DIR ..."
+        git clone "$REPO_URL" "$INSTALL_DIR"
+    else
+        echo "Project directory already exists at $INSTALL_DIR"
+    fi
+    cd "$INSTALL_DIR"
+    exec bash install.sh "$@"
+    exit 0
+fi
 
 echo ""
 echo "======================================"
@@ -13,7 +31,7 @@ echo "      Wingbits Station Web Config"
 echo "      Web Control Panel Installation Script"
 echo "======================================"
 echo ""
-echo "This script will install all requirements, create the necessary files, "
+echo "This script will install all requirements, create the necessary files,"
 echo "setup the web backend/frontend, and start the service automatically."
 echo ""
 
@@ -28,8 +46,6 @@ if ! command -v wingbits &> /dev/null; then
     echo "------------------------------------------------------------"
     echo "?? Wingbits client is not installed."
     echo ""
-
-    # ?????? ??????? ?????? ??? ?????
     if [[ -n "$loc" && -n "$id" ]]; then
         LAT="$(echo $loc | cut -d',' -f1 | xargs)"
         LON="$(echo $loc | cut -d',' -f2 | xargs)"
@@ -50,7 +66,6 @@ if ! command -v wingbits &> /dev/null; then
 
     echo "Installing Wingbits client with the provided details..."
 
-    # --- Run the installation ---
     curl -sL https://gitlab.com/wingbits/config/-/raw/master/download.sh | sudo loc="$LAT, $LON" id="$STATION_ID" bash
 
     echo "? Wingbits client installation finished."
@@ -70,7 +85,6 @@ fi
 echo ""
 # --- Make all sub-scripts executable ---
 echo "Setting execute permissions for sub-scripts..."
-SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 chmod +x "$SCRIPT_DIR/dependencies.sh"
 chmod +x "$SCRIPT_DIR/project-setup.sh"
 chmod +x "$SCRIPT_DIR/backend-deps.sh"
